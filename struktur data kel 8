@@ -1,0 +1,45 @@
+class LaptopNode:
+    def __init__(self, ram, execution_time, operation_count, depth):
+        self.ram = ram
+        self.execution_time = execution_time
+        self.operation_count = operation_count
+        self.depth = depth
+        self.children = []
+    
+    def add_child(self, ram, execution_time, operation_count):
+        child = LaptopNode(ram, execution_time, operation_count, self.depth + 1)
+        self.children.append(child)
+    
+    def dfs_search(self, target_ram):
+        if self.ram == target_ram:
+            return self
+        
+        for child in self.children:
+            result = child.dfs_search(target_ram)
+            if result:
+                return result
+        
+        return None
+
+# Contoh penggunaan
+def main():
+    # Bangun pohon laptop
+    root = LaptopNode("8GB", 5.2, 1000, 0)
+    root.add_child("16GB", 6.5, 1200)
+    root.add_child("4GB", 4.0, 800)
+    root.children[0].add_child("32GB", 7.8, 1500)
+    root.children[0].add_child("16GB", 6.2, 1100)
+    
+    # Pencarian menggunakan DFS
+    target_ram = "32GB"
+    result_node = root.dfs_search(target_ram)
+    
+    if result_node:
+        print(f"RAM {target_ram} ditemukan pada kedalaman {result_node.depth}.")
+        print(f"Waktu eksekusi: {result_node.execution_time} detik")
+        print(f"Jumlah operasi: {result_node.operation_count}")
+    else:
+        print(f"RAM {target_ram} tidak ditemukan dalam pohon laptop.")
+
+if __name__ == "__main__":
+    main()
